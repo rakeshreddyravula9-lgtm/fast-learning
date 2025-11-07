@@ -471,37 +471,55 @@ function appendMessageChunk(chunk) {
 }
 
 function formatMessage(text) {
+    // Ensure text has proper line breaks
+    if (!text) return '';
+    
     // Use marked.js for proper markdown rendering
     if (typeof marked !== 'undefined') {
-        marked.setOptions({
-            breaks: true,  // Convert \n to <br>
-            gfm: true,     // GitHub Flavored Markdown
-            sanitize: false // Allow HTML
-        });
-        return marked.parse(text);
+        try {
+            // Configure marked for better rendering
+            marked.setOptions({
+                breaks: true,        // Convert \n to <br>
+                gfm: true,          // GitHub Flavored Markdown
+                headerIds: false,   // Don't add IDs to headers
+                mangle: false,      // Don't escape autolinked email addresses
+                pedantic: false,    // Don't be pedantic
+                sanitize: false     // Allow HTML (we trust our own content)
+            });
+            
+            // Parse the markdown
+            const html = marked.parse(text);
+            return html;
+        } catch (e) {
+            console.error('Marked.js error:', e);
+            // Fall through to fallback
+        }
     }
     
     // Fallback: Basic markdown-like formatting
-    let formatted = text;
+    let formatted = escapeHtml(text);
     
-    // Code blocks
-    formatted = formatted.replace(/```(\w+)?\n([\s\S]*?)```/g, (match, lang, code) => {
-        return `<pre><code class="language-${lang || 'plaintext'}">${escapeHtml(code.trim())}</code></pre>`;
-    });
-    
-    // Inline code
-    formatted = formatted.replace(/`([^`]+)`/g, '<code>$1</code>');
+    // Headers
+    formatted = formatted.replace(/^### (.*$)/gim, '<h3>$1</h3>');
+    formatted = formatted.replace(/^## (.*$)/gim, '<h2>$1</h2>');
+    formatted = formatted.replace(/^# (.*$)/gim, '<h1>$1</h1>');
     
     // Bold
     formatted = formatted.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
     
-    // Italic  
+    // Italic
     formatted = formatted.replace(/\*([^*]+)\*/g, '<em>$1</em>');
     
-    // Line breaks - convert double newlines to paragraphs, single to <br>
-    formatted = formatted.replace(/\n\n+/g, '</p><p>');
+    // Horizontal rule
+    formatted = formatted.replace(/^---$/gim, '<hr>');
+    
+    // Bullet lists
+    formatted = formatted.replace(/^• (.*)$/gim, '<li>$1</li>');
+    formatted = formatted.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
+    
+    // Line breaks - preserve spacing
+    formatted = formatted.replace(/\n\n/g, '<br><br>');
     formatted = formatted.replace(/\n/g, '<br>');
-    formatted = '<p>' + formatted + '</p>';
     
     return formatted;
 }
