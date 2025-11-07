@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Chatbot Platform - Like ChatGPT</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fas fa-robot"></i> AI Chat</h2>
+                <button class="btn-new-chat" id="newChatBtn">
+                    <i class="fas fa-plus"></i> New Chat
+                </button>
+            </div>
+            
+            <div class="conversations-list" id="conversationsList">
+                <!-- Conversations will be loaded here -->
+            </div>
+            
+            <div class="sidebar-footer">
+                <button class="btn-clear-all" id="clearAllBtn">
+                    <i class="fas fa-trash"></i> Clear All Chats
+                </button>
+            </div>
+        </div>
+        
+        <!-- Main Chat Area -->
+        <div class="main-content">
+            <!-- Header -->
+            <div class="chat-header">
+                <button class="btn-toggle-sidebar" id="toggleSidebar">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="header-info">
+                    <h1 id="chatTitle">AI Chatbot Platform</h1>
+                    <span class="model-badge" id="modelBadge">GPT-3.5 Turbo</span>
+                </div>
+                <div class="header-actions">
+                    <select class="model-selector" id="modelSelector">
+                        <option value="gpt-3.5-turbo">GPT-3.5 Turbo</option>
+                        <option value="gpt-4">GPT-4</option>
+                        <option value="local-llama">Local LLaMA</option>
+                        <option value="local-mistral">Local Mistral</option>
+                    </select>
+                    <button class="btn-theme-toggle" id="themeToggle">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Chat Messages -->
+            <div class="chat-container" id="chatContainer">
+                <div class="welcome-screen" id="welcomeScreen">
+                    <div class="welcome-content">
+                        <i class="fas fa-robot welcome-icon"></i>
+                        <h1>Welcome to AI Chatbot Platform</h1>
+                        <p>Start a conversation with AI. Ask anything!</p>
+                        
+                        <div class="example-prompts">
+                            <h3>Try asking:</h3>
+                            <div class="prompts-grid">
+                                <div class="prompt-card" data-prompt="Explain quantum computing in simple terms">
+                                    <i class="fas fa-atom"></i>
+                                    <p>Explain quantum computing</p>
+                                </div>
+                                <div class="prompt-card" data-prompt="Write a Python function to reverse a string">
+                                    <i class="fas fa-code"></i>
+                                    <p>Write code examples</p>
+                                </div>
+                                <div class="prompt-card" data-prompt="Give me tips for learning AI and machine learning">
+                                    <i class="fas fa-brain"></i>
+                                    <p>Learn about AI/ML</p>
+                                </div>
+                                <div class="prompt-card" data-prompt="What are the best practices for web development?">
+                                    <i class="fas fa-globe"></i>
+                                    <p>Web development tips</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="messages" id="messages">
+                    <!-- Messages will appear here -->
+                </div>
+                
+                <!-- Typing Indicator -->
+                <div class="typing-indicator" id="typingIndicator" style="display: none;">
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                </div>
+            </div>
+            
+            <!-- Input Area -->
+            <div class="input-area">
+                <div class="input-container">
+                    <textarea 
+                        class="message-input" 
+                        id="messageInput" 
+                        placeholder="Type your message here... (Press Enter to send, Shift+Enter for new line)"
+                        rows="1"
+                    ></textarea>
+                    <button class="btn-send" id="sendBtn">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+                <div class="input-footer">
+                    <span class="info-text">
+                        <i class="fas fa-info-circle"></i> 
+                        AI responses may not always be accurate. Verify important information.
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Scripts -->
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css">
+    <script src="js/app.js"></script>
+</body>
+</html>
