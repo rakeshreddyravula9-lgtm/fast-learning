@@ -1,3 +1,8 @@
+// API Base URL - automatically detect if local or production
+const API_URL = window.location.hostname === 'localhost' 
+    ? 'http://localhost:5000'
+    : window.location.origin;
+
 // Global state
 let currentSessionId = null;
 let socket = null;
@@ -47,7 +52,7 @@ async function checkAuthentication() {
     
     // Verify session
     try {
-        const response = await fetch('http://localhost:5000/api/auth/verify', {
+        const response = await fetch(`${API_URL}/api/auth/verify`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -101,7 +106,7 @@ async function handleLogout() {
     if (!confirm('Are you sure you want to logout?')) return;
     
     try {
-        await fetch('http://localhost:5000/api/auth/logout', {
+        await fetch(`${API_URL}/api/auth/logout`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -144,7 +149,7 @@ function updateThemeIcon(theme) {
 
 // WebSocket Connection
 function initializeWebSocket() {
-    socket = io('http://localhost:5000');
+    socket = io(API_URL);
     
     socket.on('connect', () => {
         console.log('Connected to server');
@@ -243,7 +248,7 @@ function autoResizeTextarea() {
 // Conversations Management
 async function loadConversations() {
     try {
-        const response = await fetch('http://localhost:5000/api/conversations');
+        const response = await fetch(`${API_URL}/api/conversations`);
         const data = await response.json();
         conversations = data.conversations;
         renderConversations();
@@ -291,7 +296,7 @@ function renderConversations() {
 
 async function loadConversation(sessionId) {
     try {
-        const response = await fetch(`http://localhost:5000/api/conversations/${sessionId}`);
+        const response = await fetch(`${API_URL}/api/conversations/${sessionId}`);
         const conversation = await response.json();
         
         currentSessionId = sessionId;
@@ -325,7 +330,7 @@ async function deleteConversation(sessionId) {
     if (!confirm('Delete this conversation?')) return;
     
     try {
-        await fetch(`http://localhost:5000/api/conversations/${sessionId}`, {
+        await fetch(`${API_URL}/api/conversations/${sessionId}`, {
             method: 'DELETE'
         });
         
@@ -343,7 +348,7 @@ async function clearAllConversations() {
     if (!confirm('Clear all conversations? This cannot be undone.')) return;
     
     try {
-        await fetch('http://localhost:5000/api/conversations/clear', {
+        await fetch(`${API_URL}/api/conversations/clear`, {
             method: 'POST'
         });
         

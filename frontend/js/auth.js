@@ -1,5 +1,7 @@
-// API Base URL
-const API_URL = 'http://localhost:5000/api';
+// API Base URL - automatically detect if local or production
+const API_URL = window.location.hostname === 'localhost' 
+    ? 'http://localhost:5000/api'
+    : `${window.location.origin}/api`;
 
 // DOM Elements
 const loginForm = document.getElementById('loginForm');
