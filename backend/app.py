@@ -9,20 +9,33 @@ import uuid
 # Import AI utilities
 from utils.ai_engine import AIEngine
 from utils.conversation_manager import ConversationManager
+from utils.user_manager import UserManager
 
 app = Flask(__name__, static_folder='../frontend')
-CORS(app)
+app.secret_key = os.getenv('SECRET_KEY', 'fast-learning-secret-key-change-in-production')
+CORS(app, supports_credentials=True)
 socketio = SocketIO(app, cors_allowed_origins="*")
 
-# Initialize AI Engine and Conversation Manager
+# Initialize AI Engine, Conversation Manager, and User Manager
 ai_engine = AIEngine()
 conversation_manager = ConversationManager()
+user_manager = UserManager()
 
 # Store active connections
 active_sessions = {}
 
 @app.route('/')
 def index():
+    return send_from_directory(app.static_folder, 'login.html')
+
+@app.route('/login')
+@app.route('/login.html')
+def login_page():
+    return send_from_directory(app.static_folder, 'login.html')
+
+@app.route('/app')
+@app.route('/index.html')
+def main_app():
     return send_from_directory(app.static_folder, 'index.html')
 
 @app.route('/<path:path>')
@@ -37,6 +50,131 @@ def health_check():
         'timestamp': datetime.now().isoformat(),
         'ai_engine': 'ready'
     })
+
+# Authentication Endpoints
+@app.route('/api/auth/register', methods=['POST'])
+def register():
+    """Register a new user"""
+    try:
+        data = request.json
+        username = data.get('username', '').strip()
+        email = data.get('email', '').strip()
+        password = data.get('password', '')
+        full_name = data.get('full_name', '').strip()
+        
+        result = user_manager.register_user(username, email, password, full_name)
+        
+        if result['success']:
+            return jsonify(result), 201
+        else:
+            return jsonify(result), 400
+    
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@app.route('/api/auth/login', methods=['POST'])
+def login():
+    """Login user"""
+    try:
+        data = request.json
+        username_or_email = data.get('username', '').strip()
+        password = data.get('password', '')
+        
+        result = user_manager.authenticate_user(username_or_email, password)
+        
+        if result['success']:
+            return jsonify(result), 200
+        else:
+            return jsonify(result), 401
+    
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@app.route('/api/auth/logout', methods=['POST'])
+def logout():
+    """Logout user"""
+    try:
+        data = request.json
+        session_token = data.get('session_token', '')
+        
+        user_manager.logout(session_token)
+        return jsonify({'success': True, 'message': 'Logged out successfully'})
+    
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@app.route('/api/auth/verify', methods=['POST'])
+def verify_session():
+    """Verify session token"""
+    try:
+        data = request.json
+        session_token = data.get('session_token', '')
+        
+        user_data = user_manager.verify_session(session_token)
+        
+        if user_data:
+            return jsonify({'success': True, 'user': user_data})
+        else:
+            return jsonify({'success': False, 'error': 'Invalid or expired session'}), 401
+    
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@app.route('/api/auth/profile', methods=['GET'])
+def get_profile():
+    """Get user profile"""
+    try:
+        session_token = request.headers.get('Authorization', '').replace('Bearer ', '')
+        
+        user_data = user_manager.verify_session(session_token)
+        
+        if not user_data:
+            return jsonify({'success': False, 'error': 'Unauthorized'}), 401
+        
+        return jsonify({'success': True, 'user': user_data})
+    
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@app.route('/api/auth/profile', methods=['PUT'])
+def update_profile():
+    """Update user profile"""
+    try:
+        session_token = request.headers.get('Authorization', '').replace('Bearer ', '')
+        user_data = user_manager.verify_session(session_token)
+        
+        if not user_data:
+            return jsonify({'success': False, 'error': 'Unauthorized'}), 401
+        
+        data = request.json
+        full_name = data.get('full_name')
+        email = data.get('email')
+        
+        result = user_manager.update_user_profile(user_data['user_id'], full_name, email)
+        return jsonify(result)
+    
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@app.route('/api/auth/change-password', methods=['POST'])
+def change_password():
+    """Change user password"""
+    try:
+        session_token = request.headers.get('Authorization', '').replace('Bearer ', '')
+        user_data = user_manager.verify_session(session_token)
+        
+        if not user_data:
+            return jsonify({'success': False, 'error': 'Unauthorized'}), 401
+        
+        data = request.json
+        old_password = data.get('old_password', '')
+        new_password = data.get('new_password', '')
+        
+        result = user_manager.change_password(user_data['user_id'], old_password, new_password)
+        return jsonify(result)
+    
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
 
 @app.route('/api/chat', methods=['POST'])
 def chat():

@@ -208,29 +208,96 @@ class AIEngine:
         """Simple rule-based fallback response"""
         message_lower = message.lower()
         
-        # Simple pattern matching
-        if any(greeting in message_lower for greeting in ['hello', 'hi', 'hey']):
-            response = "Hello! I'm an AI assistant. How can I help you today?"
+        # Simple pattern matching with more helpful responses
+        if any(greeting in message_lower for greeting in ['hello', 'hi', 'hey', 'good morning', 'good afternoon', 'good evening']):
+            response = "Hello! I'm your AI learning assistant. I'm here to help you learn faster and answer your questions. What would you like to learn about today?"
         
-        elif any(word in message_lower for word in ['how are you', 'how do you do']):
-            response = "I'm functioning well, thank you! I'm here to help you with any questions or tasks you have."
+        elif any(word in message_lower for word in ['how are you', 'how do you do', 'whats up']):
+            response = "I'm functioning well, thank you! I'm ready to help you learn anything you'd like. Whether it's science, programming, mathematics, history, or any other topic - just ask!"
         
-        elif any(word in message_lower for word in ['your name', 'who are you']):
-            response = "I'm an AI assistant powered by this chatbot platform. I'm here to help answer your questions and assist with various tasks."
+        elif any(word in message_lower for word in ['your name', 'who are you', 'what are you']):
+            response = "I'm Fast Learning AI - your intelligent learning companion! I'm designed to help you understand complex topics, answer questions, and accelerate your learning journey. How can I assist your learning today?"
         
-        elif any(word in message_lower for word in ['help', 'what can you do']):
+        elif any(word in message_lower for word in ['help', 'what can you do', 'how does this work']):
             response = """I can help you with:
-• Answering questions on various topics
-• Providing information and explanations
-• Assisting with problem-solving
-• Having conversations
-• And much more! Just ask me anything."""
+• Explaining complex concepts in simple terms
+• Answering questions on various subjects (science, math, history, programming, etc.)
+• Providing step-by-step explanations
+• Helping with homework and learning materials
+• Breaking down difficult topics
+• Offering study tips and learning strategies
+
+Just ask me anything you'd like to learn about!"""
         
-        elif '?' in message:
-            response = f"That's an interesting question about '{message[:50]}...'. While I'm currently running in basic mode, I'd be happy to discuss this topic with you. Could you provide more context?"
+        elif any(word in message_lower for word in ['teach', 'learn', 'explain', 'understand']):
+            response = "I'd love to help you learn! What specific topic or concept would you like me to explain? I can break down complex ideas into easy-to-understand explanations."
+        
+        elif any(word in message_lower for word in ['python', 'javascript', 'programming', 'code', 'coding']):
+            response = """I can help you with programming! Here are some topics I can assist with:
+
+• Python: syntax, functions, data structures, OOP
+• JavaScript: ES6+, async/await, DOM manipulation
+• Web Development: HTML, CSS, frameworks
+• Algorithms and data structures
+• Best practices and coding patterns
+
+What specific programming topic would you like to learn about?"""
+        
+        elif any(word in message_lower for word in ['math', 'mathematics', 'calculate', 'equation']):
+            response = """I can help with mathematics! Topics include:
+
+• Algebra and equations
+• Calculus (derivatives, integrals)
+• Geometry and trigonometry
+• Statistics and probability
+• Linear algebra
+• Problem-solving strategies
+
+What math concept would you like me to explain?"""
+        
+        elif any(word in message_lower for word in ['science', 'physics', 'chemistry', 'biology']):
+            response = """I can explain science concepts! Areas I cover:
+
+• Physics: mechanics, thermodynamics, electromagnetism
+• Chemistry: atoms, molecules, reactions, periodic table
+• Biology: cells, genetics, evolution, ecosystems
+• Scientific method and experiments
+
+Which scientific topic interests you?"""
+        
+        elif any(word in message_lower for word in ['history', 'historical', 'war', 'civilization']):
+            response = "I can help you understand history! Whether it's ancient civilizations, world wars, cultural movements, or historical figures - I can provide detailed explanations and context. What historical topic would you like to explore?"
+        
+        elif '?' in message or any(word in message_lower for word in ['what', 'why', 'how', 'when', 'where', 'who']):
+            # Extract key words from the question
+            words = message_lower.split()
+            key_words = [w for w in words if len(w) > 4 and w not in ['what', 'where', 'when', 'which', 'would', 'could', 'should', 'about']]
+            
+            if key_words:
+                topic = ' '.join(key_words[:3])
+                response = f"Great question about {topic}! While I'm currently running in basic mode, I can still provide helpful information. Let me help:\n\n"
+                
+                # Try to give a more intelligent response based on keywords
+                if any(word in message_lower for word in ['quantum', 'physics', 'atom', 'particle']):
+                    response += "Quantum physics deals with the behavior of matter and energy at atomic and subatomic scales. Key concepts include wave-particle duality, quantum entanglement, and the uncertainty principle. Would you like me to explain any specific aspect?"
+                
+                elif any(word in message_lower for word in ['ai', 'artificial intelligence', 'machine learning', 'neural']):
+                    response += "Artificial Intelligence involves creating systems that can perform tasks requiring human intelligence. Machine learning allows computers to learn from data without explicit programming. Key areas include supervised learning, neural networks, and deep learning. What aspect interests you most?"
+                
+                elif any(word in message_lower for word in ['web', 'website', 'html', 'css', 'frontend']):
+                    response += "Web development involves creating websites using HTML (structure), CSS (styling), and JavaScript (interactivity). Modern web dev includes frameworks like React, Vue, or Angular for building dynamic applications. What would you like to know more about?"
+                
+                elif any(word in message_lower for word in ['function', 'variable', 'loop', 'array']):
+                    response += "In programming, functions are reusable blocks of code, variables store data, loops repeat actions, and arrays hold collections of items. These are fundamental concepts in most programming languages. Which concept would you like me to explain in detail?"
+                
+                else:
+                    response += "This is an interesting topic! Could you provide a bit more detail about what specific aspect you'd like to understand? The more specific your question, the better I can help you learn."
+            else:
+                response = "That's a great question! To give you the most helpful answer, could you provide a bit more context or specify what aspect you'd like to learn about?"
         
         else:
-            response = "I understand. Could you tell me more about what you'd like to know or discuss? I'm here to help!"
+            # Default to being helpful and educational
+            response = f"I see you're interested in learning about: '{message[:50]}...'\n\nLet me help you understand this better! Could you specify what particular aspect you'd like to learn? For example:\n\n• The basic concept or definition\n• How it works\n• Practical examples\n• Step-by-step explanation\n\nI'm here to make learning easier for you!"
         
         if stream:
             def generate_chunks():

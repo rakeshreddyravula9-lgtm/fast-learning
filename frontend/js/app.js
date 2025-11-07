@@ -4,6 +4,8 @@ let socket = null;
 let conversations = [];
 let currentModel = 'gpt-3.5-turbo';
 let isStreaming = false;
+let currentUser = null;
+let sessionToken = null;
 
 // DOM Elements
 const elements = {
@@ -26,12 +28,98 @@ const elements = {
 
 // Initialize app
 document.addEventListener('DOMContentLoaded', () => {
+    checkAuthentication();
     initializeTheme();
     initializeWebSocket();
     loadConversations();
     attachEventListeners();
     autoResizeTextarea();
 });
+
+// Check if user is authenticated
+async function checkAuthentication() {
+    sessionToken = localStorage.getItem('session_token') || sessionStorage.getItem('session_token');
+    
+    if (!sessionToken) {
+        window.location.href = '/login';
+        return;
+    }
+    
+    // Verify session
+    try {
+        const response = await fetch('http://localhost:5000/api/auth/verify', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ session_token: sessionToken })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            currentUser = data.user;
+            updateUserInterface();
+        } else {
+            // Session invalid, redirect to login
+            localStorage.removeItem('session_token');
+            sessionStorage.removeItem('session_token');
+            localStorage.removeItem('user_data');
+            window.location.href = '/login';
+        }
+    } catch (error) {
+        console.error('Authentication error:', error);
+        window.location.href = '/login';
+    }
+}
+
+// Update UI with user information
+function updateUserInterface() {
+    if (currentUser) {
+        // Update header with user name
+        const chatTitle = document.getElementById('chatTitle');
+        if (chatTitle.textContent === 'Fast Learning') {
+            chatTitle.textContent = `Welcome, ${currentUser.username}!`;
+        }
+        
+        // Add logout button if not exists
+        const headerActions = document.querySelector('.header-actions');
+        if (!document.getElementById('logoutBtn')) {
+            const logoutBtn = document.createElement('button');
+            logoutBtn.id = 'logoutBtn';
+            logoutBtn.className = 'btn-theme-toggle';
+            logoutBtn.innerHTML = '<i class="fas fa-sign-out-alt"></i>';
+            logoutBtn.title = 'Logout';
+            logoutBtn.addEventListener('click', handleLogout);
+            headerActions.appendChild(logoutBtn);
+        }
+    }
+}
+
+// Handle logout
+async function handleLogout() {
+    if (!confirm('Are you sure you want to logout?')) return;
+    
+    try {
+        await fetch('http://localhost:5000/api/auth/logout', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ session_token: sessionToken })
+        });
+    } catch (error) {
+        console.error('Logout error:', error);
+    } finally {
+        // Clear local storage
+        localStorage.removeItem('session_token');
+        sessionStorage.removeItem('session_token');
+        localStorage.removeItem('user_data');
+        
+        // Redirect to login
+        window.location.href = '/login';
+    }
+}
 
 // Theme Management
 function initializeTheme() {
