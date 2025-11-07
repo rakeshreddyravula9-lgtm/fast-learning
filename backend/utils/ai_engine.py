@@ -42,9 +42,11 @@ class AIEngine:
             self.tokenizer.pad_token = self.tokenizer.eos_token
             
             print("✓ Local AI model loaded successfully")
+            self.use_rule_based = False
             
-        except Exception as e:
+        except (ImportError, Exception) as e:
             print(f"⚠ Could not load local model: {e}")
+            print("⚠ Using rule-based AI responses (no ML libraries installed)")
             # Use rule-based fallback
             self.use_rule_based = True
     
