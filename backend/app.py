@@ -301,9 +301,13 @@ def handle_disconnect():
 def handle_message(data):
     """Handle incoming message via WebSocket"""
     try:
+        print(f"📨 Received message: {data}")
         user_message = data.get('message', '')
         session_id = data.get('session_id', str(uuid.uuid4()))
         model = data.get('model', 'gpt-3.5-turbo')
+        
+        print(f"💬 User: {user_message}")
+        print(f"🔑 Session: {session_id}")
         
         # Get conversation
         conversation = conversation_manager.get_conversation(session_id)
@@ -317,14 +321,18 @@ def handle_message(data):
         
         # Emit typing indicator
         emit('typing', {'is_typing': True})
+        print("⌨️  Typing indicator sent")
         
         # Generate AI response with streaming
+        print(f"🤖 Generating response with model: {model}")
         ai_response = ai_engine.generate_response(
             message=user_message,
             conversation_history=conversation['messages'],
             model=model,
             stream=True
         )
+        
+        print(f"✅ AI Response generated: {ai_response.get('model', 'unknown')}")
         
         # Stream response back to client
         full_response = ""
@@ -334,6 +342,8 @@ def handle_message(data):
                 'chunk': chunk,
                 'session_id': session_id
             })
+        
+        print(f"📤 Streamed {len(full_response)} characters")
         
         # Add AI response to conversation
         conversation_manager.add_message(session_id, {
@@ -350,7 +360,12 @@ def handle_message(data):
             'timestamp': datetime.now().isoformat()
         })
         
+        print("✅ Message handling complete")
+        
     except Exception as e:
+        print(f"❌ Error in handle_message: {str(e)}")
+        import traceback
+        traceback.print_exc()
         emit('error', {'error': str(e)})
 
 @socketio.on('new_conversation')

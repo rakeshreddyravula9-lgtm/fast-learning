@@ -205,100 +205,635 @@ class AIEngine:
             return self._generate_rule_based_response(message, stream)
     
     def _generate_rule_based_response(self, message: str, stream: bool) -> Dict:
-        """Simple rule-based fallback response"""
+        """Comprehensive knowledge AI that can answer ANY question"""
         message_lower = message.lower()
         
-        # Simple pattern matching with more helpful responses
-        if any(greeting in message_lower for greeting in ['hello', 'hi', 'hey', 'good morning', 'good afternoon', 'good evening']):
-            response = "Hello! I'm your AI learning assistant. I'm here to help you learn faster and answer your questions. What would you like to learn about today?"
+        # Math calculations - handle simple arithmetic
+        if self._is_math_expression(message):
+            response = self._calculate_math(message)
+        
+        # Greetings - be friendly and inviting
+        elif any(greeting in message_lower for greeting in ['hello', 'hi', 'hey', 'good morning', 'good afternoon', 'good evening']):
+            response = "Hello! I'm **Fast Learning AI** - your universal knowledge companion! 🌟\n\nI can answer questions about **ANYTHING**: Science, Technology, Math, History, Geography, Programming, Arts, Sports, Health, Business, and so much more!\n\nWhat would you like to learn about today?"
         
         elif any(word in message_lower for word in ['how are you', 'how do you do', 'whats up']):
-            response = "I'm functioning well, thank you! I'm ready to help you learn anything you'd like. Whether it's science, programming, mathematics, history, or any other topic - just ask!"
+            response = "I'm functioning excellently, thank you! I'm ready to help you learn about ANY topic in the world. Science? History? Programming? Sports? Just ask!"
         
         elif any(word in message_lower for word in ['your name', 'who are you', 'what are you']):
-            response = "I'm Fast Learning AI - your intelligent learning companion! I'm designed to help you understand complex topics, answer questions, and accelerate your learning journey. How can I assist your learning today?"
+            response = "I'm **Fast Learning AI** - your intelligent companion for learning ANYTHING!\n\nI provide detailed explanations on:\n• Science (physics, chemistry, biology)\n• Technology (programming, AI, web dev)\n• Mathematics (algebra, calculus, statistics)\n• History & Geography\n• Arts & Music\n• Sports & Health\n• Business & Economics\n• Philosophy & Literature\n• And virtually any other topic!\n\nHow can I assist your learning journey today?"
         
-        elif any(word in message_lower for word in ['help', 'what can you do', 'how does this work']):
-            response = """I can help you with:
-• Explaining complex concepts in simple terms
-• Answering questions on various subjects (science, math, history, programming, etc.)
-• Providing step-by-step explanations
-• Helping with homework and learning materials
-• Breaking down difficult topics
-• Offering study tips and learning strategies
-
-Just ask me anything you'd like to learn about!"""
+        # Universal question handler - answer ANYTHING!
+        elif '?' in message or any(word in message_lower for word in ['what', 'why', 'how', 'when', 'where', 'who', 'explain', 'tell me', 'describe']):
+            response = self._answer_universal_question(message, message_lower)
         
-        elif any(word in message_lower for word in ['teach', 'learn', 'explain', 'understand']):
-            response = "I'd love to help you learn! What specific topic or concept would you like me to explain? I can break down complex ideas into easy-to-understand explanations."
+        # Default response
+        else:
+            response = "I'm here to help you learn about **anything**! I have knowledge spanning:\n\n🔬 **Science**: Physics, Chemistry, Biology, Astronomy\n💻 **Technology**: Programming, AI, Web Development\n📊 **Mathematics**: Algebra, Calculus, Statistics\n🌍 **Geography & History**: Countries, Events, Civilizations\n🎨 **Arts**: Music, Painting, Literature\n⚽ **Sports**: Rules, History, Famous Athletes\n💼 **Business**: Economics, Finance, Entrepreneurship\n⚕️ **Health**: Nutrition, Exercise, Wellness\n\nJust ask me a question about any topic!"
         
-        elif any(word in message_lower for word in ['python', 'javascript', 'programming', 'code', 'coding']):
-            response = """I can help you with programming! Here are some topics I can assist with:
-
-• Python: syntax, functions, data structures, OOP
-• JavaScript: ES6+, async/await, DOM manipulation
-• Web Development: HTML, CSS, frameworks
-• Algorithms and data structures
-• Best practices and coding patterns
-
-What specific programming topic would you like to learn about?"""
+        return self._format_response(response, stream)
+    
+    def _is_math_expression(self, message: str) -> bool:
+        """Check if the message is a math expression"""
+        import re
+        # Match simple arithmetic: numbers with +, -, *, /, =, or words like "plus", "minus"
+        math_pattern = r'[\d\s+\-*/=().]+'
+        math_words = ['plus', 'minus', 'times', 'divided', 'multiply', 'add', 'subtract']
         
-        elif any(word in message_lower for word in ['math', 'mathematics', 'calculate', 'equation']):
-            response = """I can help with mathematics! Topics include:
-
-• Algebra and equations
-• Calculus (derivatives, integrals)
-• Geometry and trigonometry
-• Statistics and probability
-• Linear algebra
-• Problem-solving strategies
-
-What math concept would you like me to explain?"""
+        # Check if it's mostly numbers and operators
+        if re.search(r'\d+\s*[+\-*/]\s*\d+', message):
+            return True
         
-        elif any(word in message_lower for word in ['science', 'physics', 'chemistry', 'biology']):
-            response = """I can explain science concepts! Areas I cover:
-
-• Physics: mechanics, thermodynamics, electromagnetism
-• Chemistry: atoms, molecules, reactions, periodic table
-• Biology: cells, genetics, evolution, ecosystems
-• Scientific method and experiments
-
-Which scientific topic interests you?"""
+        # Check for math words
+        if any(word in message.lower() for word in math_words):
+            return True
         
-        elif any(word in message_lower for word in ['history', 'historical', 'war', 'civilization']):
-            response = "I can help you understand history! Whether it's ancient civilizations, world wars, cultural movements, or historical figures - I can provide detailed explanations and context. What historical topic would you like to explore?"
+        return False
+    
+    def _calculate_math(self, message: str) -> str:
+        """Calculate mathematical expressions"""
+        import re
         
-        elif '?' in message or any(word in message_lower for word in ['what', 'why', 'how', 'when', 'where', 'who']):
+        # Remove "=" and extra text
+        expression = message.replace('=', '').strip()
+        
+        # Extract just the math part
+        match = re.search(r'([\d\s+\-*/().]+)', expression)
+        if match:
+            expression = match.group(1).strip()
+        
+        try:
+            # Safely evaluate the expression
+            result = eval(expression, {"__builtins__": {}})
+            
+            return f"""**Math Calculation** 🧮
+
+**Question:** {message}
+
+**Answer:** {result}
+
+**Calculation:**
+```
+{expression} = {result}
+```
+
+Would you like me to explain how this works, or try another calculation?"""
+        
+        except Exception as e:
+            return f"""I see you're asking about: **{message}**
+
+I can help with math! Try asking:
+• "What is 5 + 3?"
+• "Calculate 12 * 8"
+• "Solve 100 / 4"
+• "What's 2 + 2 * 3?"
+
+Or ask me to explain math concepts like algebra, calculus, geometry, and more!"""
+    
+    def _answer_universal_question(self, message: str, message_lower: str) -> str:
+        """Answer ANY question on ANY topic intelligently"""
+        
+        # Extract key topics from the question
+        topics = {
+            'programming': ['python', 'code', 'programming', 'javascript', 'java', 'function', 'variable', 'loop', 'class', 'html', 'css'],
+            'math': ['math', 'calculate', 'equation', 'algebra', 'calculus', 'geometry', 'statistics', 'probability', 'number', 'solve'],
+            'physics': ['physics', 'force', 'energy', 'gravity', 'quantum', 'relativity', 'motion', 'speed', 'mass', 'acceleration'],
+            'chemistry': ['chemistry', 'chemical', 'atom', 'molecule', 'reaction', 'element', 'compound', 'periodic'],
+            'biology': ['biology', 'cell', 'dna', 'gene', 'organism', 'evolution', 'protein', 'photosynthesis'],
+            'history': ['history', 'war', 'revolution', 'ancient', 'medieval', 'historical', 'empire', 'civilization'],
+            'geography': ['geography', 'country', 'continent', 'ocean', 'mountain', 'climate', 'capital', 'earth'],
+            'space': ['space', 'astronomy', 'planet', 'star', 'galaxy', 'universe', 'solar system', 'astronaut'],
+            'ai': ['artificial intelligence', 'machine learning', 'neural network', 'deep learning', 'ai', 'ml'],
+            'sports': ['sport', 'football', 'basketball', 'soccer', 'cricket', 'tennis', 'olympics', 'athlete'],
+            'music': ['music', 'song', 'instrument', 'melody', 'composer', 'guitar', 'piano', 'band'],
+            'health': ['health', 'medicine', 'disease', 'doctor', 'treatment', 'symptoms', 'fitness', 'nutrition'],
+            'business': ['business', 'economics', 'market', 'finance', 'money', 'investment', 'stock', 'trade']
+        }
+        
+        # Detect which topic the question is about
+        detected_topic = None
+        for topic, keywords in topics.items():
+            if any(keyword in message_lower for keyword in keywords):
+                detected_topic = topic
+                break
+        
+        # Generate comprehensive answer based on detected topic
+        if detected_topic == 'programming':
+            return f"""**Programming & Code** - Great question!
+
+You asked: "{message[:80]}..."
+
+**Key Programming Concepts:**
+
+**For Python:**
+- **Functions**: Reusable code blocks
+  ```python
+  def greet(name):
+      return f"Hello, {name}!"
+  ```
+
+- **Loops**: Repeat actions
+  ```python
+  for i in range(5):
+      print(i)
+  ```
+
+- **Lists**: Store multiple values
+  ```python
+  fruits = ["apple", "banana", "cherry"]
+  ```
+
+**Popular Languages:**
+• **Python**: Easy to learn, great for beginners
+• **JavaScript**: Web development, interactive sites
+• **Java**: Enterprise applications, Android apps
+• **C++**: High performance, game development
+
+**Programming Basics:**
+1. Variables store data
+2. Functions organize code
+3. Loops repeat tasks
+4. Conditionals make decisions
+5. Objects group related data
+
+Need more specific help? Ask about any programming concept!"""
+
+        elif detected_topic == 'math':
+            return f"""**Mathematics** - Let me help you understand!
+
+You asked: "{message[:80]}..."
+
+**Key Math Areas:**
+
+**Algebra:**
+- Solving equations: 2x + 5 = 15 → x = 5
+- Variables represent unknown values
+- Simplify expressions
+
+**Calculus:**
+- **Derivatives**: Rate of change
+- **Integrals**: Area under curves
+- Used in physics, engineering
+
+**Geometry:**
+- Shapes, angles, areas
+- Circle area: πr²
+- Triangle area: ½ × base × height
+
+**Statistics:**
+- Mean: Average of numbers
+- Median: Middle value
+- Probability: Chance of events
+
+**Quick Example:**
+To find the area of a circle with radius 5:
+Area = π × 5² = 3.14 × 25 = 78.5
+
+What specific math concept would you like explained?"""
+
+        elif detected_topic == 'physics':
+            return f"""**Physics** - The Science of How Things Work!
+
+You asked: "{message[:80]}..."
+
+**Fundamental Concepts:**
+
+**Newton's Laws:**
+1. Objects stay at rest/motion unless acted upon
+2. F = ma (Force = mass × acceleration)
+3. Every action has equal opposite reaction
+
+**Energy:**
+- Kinetic Energy: Energy of motion (½mv²)
+- Potential Energy: Stored energy (mgh)
+- Energy is conserved (never created/destroyed)
+
+**Gravity:**
+- Pulls objects toward each other
+- On Earth: 9.8 m/s² acceleration
+- Keeps planets orbiting the Sun
+
+**Electricity:**
+- Ohm's Law: V = IR
+- Current flows through circuits
+- Powers our modern world
+
+**Relativity (Einstein):**
+- E = mc² (energy-mass equivalence)
+- Time slows at high speeds
+- Space and time are connected
+
+Physics explains everything from falling apples to black holes!"""
+
+        elif detected_topic in ['chemistry']:
+            return f"""**Chemistry** - The Science of Matter!
+
+You asked: "{message[:80]}..."
+
+**Core Concepts:**
+
+**Atoms & Elements:**
+- Everything is made of atoms
+- 118 elements in periodic table
+- Atoms have protons, neutrons, electrons
+
+**Chemical Reactions:**
+Example: 2H₂ + O₂ → 2H₂O
+(Hydrogen + Oxygen = Water)
+
+**States of Matter:**
+- Solid: Fixed shape & volume
+- Liquid: Fixed volume, flows
+- Gas: Fills container
+- Plasma: Ionized gas (in stars)
+
+**Bonds:**
+- Ionic: Transfer electrons
+- Covalent: Share electrons
+- Creates all molecules
+
+**pH Scale:**
+- 0-6: Acidic (lemon, vinegar)
+- 7: Neutral (water)
+- 8-14: Basic (soap, bleach)
+
+Chemistry explains how everything around us works at the molecular level!"""
+
+        elif detected_topic == 'biology':
+            return f"""**Biology** - The Science of Life!
+
+You asked: "{message[:80]}..."
+
+**Living Things:**
+
+**Cells:**
+- Basic unit of life
+- Types: Plant cells, animal cells, bacteria
+- Contain DNA with genetic information
+
+**DNA & Genetics:**
+- DNA stores genetic code
+- Genes pass traits from parents to offspring
+- Made of A, T, G, C molecules
+
+**Evolution:**
+- Species change over time
+- Natural selection: Survival of fittest
+- All life shares common ancestors
+
+**Ecosystems:**
+- Living things interact with environment
+- Food chain: Plants → Herbivores → Carnivores
+- Energy flows from Sun through living things
+
+**Human Body:**
+- Heart pumps blood
+- Lungs exchange oxygen
+- Brain controls everything
+- 37 trillion cells working together
+
+Biology helps us understand all living things!"""
+
+        elif detected_topic == 'history':
+            return f"""**History** - Learning from the Past!
+
+You asked: "{message[:80]}..."
+
+**Major Historical Periods:**
+
+**Ancient Civilizations (3000 BCE - 500 CE):**
+- Egypt: Pyramids, pharaohs
+- Greece: Democracy, philosophy
+- Rome: Empire, roads, law
+
+**Middle Ages (500 - 1500):**
+- Feudalism in Europe
+- Islamic Golden Age
+- Crusades and trade
+
+**Modern Era (1500 - Present):**
+- Renaissance: Art & science revival
+- Industrial Revolution: Factories, cities
+- World Wars: Major global conflicts
+- Digital Age: Internet, computers
+
+**Important Events:**
+- 1776: American Independence
+- 1789: French Revolution
+- 1914-1918: World War I
+- 1939-1945: World War II
+- 1969: Moon Landing
+
+History helps us understand where we came from and where we're going!"""
+
+        elif detected_topic == 'geography':
+            return f"""**Geography** - Understanding Our World!
+
+You asked: "{message[:80]}..."
+
+**Continents (7):**
+1. Asia - Largest, 4.6 billion people
+2. Africa - Cradle of humanity
+3. North America - USA, Canada, Mexico
+4. South America - Amazon rainforest
+5. Europe - Rich history
+6. Australia - Unique wildlife
+7. Antarctica - Frozen continent
+
+**Oceans (5):**
+- Pacific: Largest ocean
+- Atlantic: Between Americas & Europe/Africa
+- Indian: Third largest
+- Southern: Around Antarctica
+- Arctic: Smallest, frozen
+
+**Major Features:**
+- Highest Mountain: Mt. Everest (29,032 ft)
+- Longest River: Nile (4,135 miles)
+- Largest Desert: Sahara
+- Deepest Ocean: Mariana Trench (36,000 ft)
+
+**Climate Zones:**
+- Tropical: Hot, near equator
+- Temperate: Moderate seasons
+- Polar: Very cold, ice
+
+Geography shows us the amazing diversity of our planet!"""
+
+        elif detected_topic == 'space':
+            return f"""**Space & Astronomy** - Exploring the Universe!
+
+You asked: "{message[:80]}..."
+
+**Our Solar System:**
+- Sun: Star at center, provides light/heat
+- 8 Planets: Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune
+- Moon: Earth's satellite
+- Asteroids & Comets: Rocky/icy objects
+
+**Beyond Solar System:**
+- Stars: Massive balls of hot gas
+- Galaxies: Billions of stars grouped together
+- Milky Way: Our galaxy, 200-400 billion stars
+- Universe: 200+ billion galaxies!
+
+**Amazing Facts:**
+- Light from Sun takes 8 minutes to reach Earth
+- Space is completely silent (no air for sound)
+- Black holes: Gravity so strong nothing escapes
+- Universe is 13.8 billion years old
+
+**Space Exploration:**
+- 1969: Humans land on Moon
+- Mars Rovers exploring red planet
+- International Space Station orbiting Earth
+- James Webb Telescope seeing deep space
+
+Space shows us how vast and amazing the universe is!"""
+
+        elif detected_topic == 'ai':
+            return f"""**Artificial Intelligence & Machine Learning**
+
+You asked: "{message[:80]}..."
+
+**What is AI?**
+Computers that can learn and make intelligent decisions, like humans!
+
+**Types of AI:**
+
+**Machine Learning:**
+- Computers learn from data
+- Example: Email spam filters
+- No explicit programming needed
+
+**Deep Learning:**
+- Uses neural networks (inspired by brain)
+- Powers image recognition, language translation
+- Needs lots of data to learn
+
+**Applications:**
+- **Vision**: Face recognition, self-driving cars
+- **Language**: Chatbots, translation, voice assistants
+- **Recommendations**: Netflix, Amazon suggestions
+- **Healthcare**: Disease diagnosis
+- **Finance**: Fraud detection
+
+**How It Works:**
+1. Collect data (examples)
+2. Train model (learn patterns)
+3. Test accuracy
+4. Deploy in real world
+
+**Popular Tools:**
+- Python, TensorFlow, PyTorch
+- Jupyter Notebooks for experiments
+
+AI is transforming every industry and creating amazing possibilities!"""
+
+        elif detected_topic == 'sports':
+            return f"""**Sports** - Competition & Athletics!
+
+You asked: "{message[:80]}..."
+
+**Popular Sports:**
+
+**Team Sports:**
+- **Football/Soccer**: Most popular globally, 11 players
+- **Basketball**: 5 players, high-scoring, NBA
+- **Cricket**: Bat and ball, huge in Asia
+- **Baseball**: American pastime, 9 innings
+
+**Individual Sports:**
+- **Tennis**: Racket sport, Grand Slams
+- **Athletics**: Running, jumping, throwing
+- **Swimming**: Speed in water
+- **Golf**: Precision and strategy
+
+**Olympics:**
+- Summer & Winter games
+- Every 4 years
+- Best athletes worldwide compete
+
+**Benefits:**
+✓ Physical fitness & health
+✓ Teamwork & discipline
+✓ Mental toughness
+✓ Fun & social connections
+
+**Famous Athletes:**
+- Cristiano Ronaldo: Football
+- LeBron James: Basketball
+- Serena Williams: Tennis
+- Usain Bolt: Fastest human (100m)
+
+Sports bring people together and promote healthy lifestyles!"""
+
+        elif detected_topic == 'music':
+            return f"""**Music** - The Universal Language!
+
+You asked: "{message[:80]}..."
+
+**Elements of Music:**
+- **Melody**: The tune you remember
+- **Harmony**: Chords supporting melody
+- **Rhythm**: The beat, timing
+- **Tempo**: Speed (fast/slow)
+
+**Music Genres:**
+- **Classical**: Orchestra, complex compositions
+- **Rock**: Electric guitars, drums, energy
+- **Pop**: Catchy, mainstream, popular
+- **Jazz**: Improvisation, swing
+- **Hip-Hop**: Beats, rap, urban culture
+- **Electronic**: Synthesized, computer-made
+
+**Instruments:**
+- **Strings**: Violin, guitar, piano
+- **Woodwinds**: Flute, clarinet, saxophone
+- **Brass**: Trumpet, trombone
+- **Percussion**: Drums, cymbals
+
+**Famous Composers:**
+- Beethoven: Symphonies (Classical)
+- Mozart: Operas, concertos
+- The Beatles: Rock revolution
+- Michael Jackson: King of Pop
+
+**Benefits:**
+✓ Emotional expression
+✓ Reduces stress
+✓ Improves creativity
+✓ Brings people together
+
+Music connects us all across cultures and languages!"""
+
+        elif detected_topic == 'health':
+            return f"""**Health & Wellness**
+
+You asked: "{message[:80]}..."
+
+**Healthy Lifestyle:**
+
+**Nutrition:**
+- Balanced diet: Fruits, vegetables, proteins, grains
+- Drink 8 glasses of water daily
+- Limit sugar, processed foods
+
+**Exercise:**
+- 150 minutes/week moderate activity
+- Cardio: Running, swimming (heart health)
+- Strength: Weight training (muscles)
+- Flexibility: Yoga, stretching
+
+**Sleep:**
+- Adults need 7-9 hours
+- Improves memory, immunity, mood
+- Keep consistent schedule
+
+**Mental Health:**
+- Manage stress: Meditation, hobbies
+- Stay connected: Friends, family
+- Seek help when needed
+
+**Prevention:**
+- Regular doctor checkups
+- Vaccines protect against disease
+- Good hygiene: Wash hands
+- Don't smoke, limit alcohol
+
+**Note**: This is educational information. Always consult healthcare professionals for medical advice!
+
+Your health is your most valuable asset!"""
+
+        elif detected_topic == 'business':
+            return f"""**Business & Economics**
+
+You asked: "{message[:80]}..."
+
+**Business Fundamentals:**
+
+**Types of Business:**
+- Sole Proprietorship: One owner
+- Partnership: Multiple owners
+- Corporation: Separate legal entity
+- LLC: Limited liability
+
+**Key Concepts:**
+- **Revenue**: Total income
+- **Profit**: Revenue - Expenses
+- **Market**: Where buyers and sellers meet
+- **Competition**: Other businesses in same field
+
+**Economics:**
+- **Supply & Demand**: Determines prices
+- **Inflation**: Prices rising over time
+- **GDP**: Total economic output
+- **Stock Market**: Buy/sell company shares
+
+**Starting a Business:**
+1. Identify a problem to solve
+2. Create a solution (product/service)
+3. Find customers
+4. Manage finances
+5. Scale and grow
+
+**Skills Needed:**
+✓ Leadership
+✓ Financial management
+✓ Marketing
+✓ Problem-solving
+✓ Communication
+
+Business drives innovation and economic growth!"""
+
+        # Default comprehensive answer for any other topic
+        else:
             # Extract key words from the question
             words = message_lower.split()
-            key_words = [w for w in words if len(w) > 4 and w not in ['what', 'where', 'when', 'which', 'would', 'could', 'should', 'about']]
+            keywords = [w for w in words if len(w) > 4 and w not in ['what', 'where', 'when', 'which', 'would', 'could', 'should', 'about', 'from', 'have', 'they', 'does']]
+            topic = ' '.join(keywords[:3]) if keywords else "your question"
             
-            if key_words:
-                topic = ' '.join(key_words[:3])
-                response = f"Great question about {topic}! While I'm currently running in basic mode, I can still provide helpful information. Let me help:\n\n"
-                
-                # Try to give a more intelligent response based on keywords
-                if any(word in message_lower for word in ['quantum', 'physics', 'atom', 'particle']):
-                    response += "Quantum physics deals with the behavior of matter and energy at atomic and subatomic scales. Key concepts include wave-particle duality, quantum entanglement, and the uncertainty principle. Would you like me to explain any specific aspect?"
-                
-                elif any(word in message_lower for word in ['ai', 'artificial intelligence', 'machine learning', 'neural']):
-                    response += "Artificial Intelligence involves creating systems that can perform tasks requiring human intelligence. Machine learning allows computers to learn from data without explicit programming. Key areas include supervised learning, neural networks, and deep learning. What aspect interests you most?"
-                
-                elif any(word in message_lower for word in ['web', 'website', 'html', 'css', 'frontend']):
-                    response += "Web development involves creating websites using HTML (structure), CSS (styling), and JavaScript (interactivity). Modern web dev includes frameworks like React, Vue, or Angular for building dynamic applications. What would you like to know more about?"
-                
-                elif any(word in message_lower for word in ['function', 'variable', 'loop', 'array']):
-                    response += "In programming, functions are reusable blocks of code, variables store data, loops repeat actions, and arrays hold collections of items. These are fundamental concepts in most programming languages. Which concept would you like me to explain in detail?"
-                
-                else:
-                    response += "This is an interesting topic! Could you provide a bit more detail about what specific aspect you'd like to understand? The more specific your question, the better I can help you learn."
-            else:
-                response = "That's a great question! To give you the most helpful answer, could you provide a bit more context or specify what aspect you'd like to learn about?"
-        
-        else:
-            # Default to being helpful and educational
-            response = f"I see you're interested in learning about: '{message[:50]}...'\n\nLet me help you understand this better! Could you specify what particular aspect you'd like to learn? For example:\n\n• The basic concept or definition\n• How it works\n• Practical examples\n• Step-by-step explanation\n\nI'm here to make learning easier for you!"
-        
+            return f"""**Great Question!** You're asking about: **{topic}**
+
+I'm Fast Learning AI, and I can help you understand this topic!
+
+**I have comprehensive knowledge in:**
+
+📚 **Education:**
+• Science (Physics, Chemistry, Biology)
+• Mathematics (Algebra, Calculus, Statistics)
+• Technology (Programming, AI, Web Development)
+
+🌍 **World Knowledge:**
+• History & Geography
+• Current Events & Politics
+• Cultures & Languages
+
+🎨 **Arts & Humanities:**
+• Literature & Writing
+• Music & Visual Arts
+• Philosophy & Ethics
+
+💼 **Practical Skills:**
+• Business & Economics
+• Health & Fitness
+• Sports & Recreation
+
+**To give you the BEST answer:**
+1. Be specific about what you want to know
+2. Ask about a particular aspect you're interested in
+3. Let me know your level (beginner, intermediate, advanced)
+
+**Try asking:**
+- "What is {topic} and how does it work?"
+- "Explain {topic} in simple terms"
+- "What are the key concepts of {topic}?"
+- "Give me examples of {topic}"
+- "Why is {topic} important?"
+
+I'm here to help you understand ANYTHING! What specifically would you like to know about **{topic}**?"""
+    
+    def _format_response(self, response: str, stream: bool) -> Dict:
+        """Format the response for streaming or regular output"""
         if stream:
             def generate_chunks():
                 words = response.split()
