@@ -229,7 +229,7 @@ function createNewChat() {
     currentSessionId = null;
     elements.welcomeScreen.classList.remove('hidden');
     elements.messages.innerHTML = '';
-    elements.chatTitle.textContent = 'AI Chatbot Platform';
+    elements.chatTitle.textContent = 'Fast Learning';
     renderConversations();
 }
 

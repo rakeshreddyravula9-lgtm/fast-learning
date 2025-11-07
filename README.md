@@ -1,8 +1,8 @@
-# AI Chatbot Platform
+# Fast Learning
 
-A full-stack conversational AI platform similar to ChatGPT, built with Flask and modern web technologies. Features real-time chat with WebSocket support, conversation history, and multiple AI model support.
+A full-stack conversational AI learning platform similar to ChatGPT, built with Flask and modern web technologies. Features real-time chat with WebSocket support, conversation history, and multiple AI model support.
 
-![AI Chatbot Platform](https://img.shields.io/badge/AI-Chatbot-10a37f?style=for-the-badge)
+![Fast Learning](https://img.shields.io/badge/AI-Fast%20Learning-10a37f?style=for-the-badge)
 ![Python](https://img.shields.io/badge/Python-3.12-blue?style=for-the-badge)
 ![Flask](https://img.shields.io/badge/Flask-3.0.0-black?style=for-the-badge)
 ![WebSocket](https://img.shields.io/badge/WebSocket-Enabled-orange?style=for-the-badge)
@@ -41,7 +41,7 @@ A full-stack conversational AI platform similar to ChatGPT, built with Flask and
 
 1. **Clone or navigate to the repository**
 ```bash
-cd ai-chatbot-platform
+cd fast-learning
 ```
 
 2. **Create and activate virtual environment**
@@ -78,7 +78,7 @@ http://localhost:5000
 ## 📁 Project Structure
 
 ```
-ai-chatbot-platform/
+fast-learning/
 ├── backend/
 │   ├── app.py                      # Flask application with WebSocket
 │   ├── conversations/              # Stored conversation JSON files

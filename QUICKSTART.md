@@ -1,4 +1,4 @@
-# Quick Start Guide - AI Chatbot Platform
+# Quick Start Guide - Fast Learning
 
 Get up and running in 5 minutes!
 
@@ -12,7 +12,7 @@ Get up and running in 5 minutes!
 
 ### Step 1: Navigate to Project
 ```bash
-cd ai-chatbot-platform
+cd fast-learning
 ```
 
 ### Step 2: Create Virtual Environment
