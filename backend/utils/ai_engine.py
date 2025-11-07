@@ -293,6 +293,11 @@ Or ask me to explain math concepts like algebra, calculus, geometry, and more!""
         
         # Extract key topics from the question
         topics = {
+            'india': ['india', 'indian', 'delhi', 'mumbai', 'bangalore', 'taj mahal', 'gandhi', 'bollywood'],
+            'usa': ['usa', 'america', 'united states', 'washington', 'new york', 'california'],
+            'china': ['china', 'chinese', 'beijing', 'shanghai', 'great wall'],
+            'japan': ['japan', 'japanese', 'tokyo', 'kyoto', 'anime', 'sushi'],
+            'europe': ['europe', 'european', 'paris', 'london', 'berlin', 'rome'],
             'programming': ['python', 'code', 'programming', 'javascript', 'java', 'function', 'variable', 'loop', 'class', 'html', 'css'],
             'math': ['math', 'calculate', 'equation', 'algebra', 'calculus', 'geometry', 'statistics', 'probability', 'number', 'solve'],
             'physics': ['physics', 'force', 'energy', 'gravity', 'quantum', 'relativity', 'motion', 'speed', 'mass', 'acceleration'],
@@ -316,7 +321,60 @@ Or ask me to explain math concepts like algebra, calculus, geometry, and more!""
                 break
         
         # Generate comprehensive answer based on detected topic
-        if detected_topic == 'programming':
+        if detected_topic == 'india':
+            return f"""**India** 🇮🇳 - Incredible India!
+
+You asked: "{message[:80]}..."
+
+**Basic Facts:**
+- **Capital**: New Delhi
+- **Population**: 1.4+ billion (world's most populous)
+- **Official Languages**: Hindi & English (22 official languages total)
+- **Currency**: Indian Rupee (₹)
+- **Area**: 3.3 million km² (7th largest country)
+
+**Rich History:**
+- One of the world's oldest civilizations (5000+ years)
+- Home to 4 major religions: Hinduism, Buddhism, Jainism, Sikhism
+- Ancient achievements: Mathematics (zero, decimal), Ayurveda, Yoga
+- Independence: August 15, 1947 (from British rule)
+- Led by Mahatma Gandhi's non-violent movement
+
+**Culture & Diversity:**
+- **Festivals**: Diwali (Festival of Lights), Holi (Colors), Eid
+- **Cuisine**: Curry, Biryani, Dosa, Samosa, Chai
+- **Clothing**: Saree, Kurta, Traditional & Modern mix
+- **Bollywood**: Largest film industry by movies produced
+- **Classical Arts**: Bharatanatyam, Kathak dance, Classical music
+
+**Famous Landmarks:**
+- **Taj Mahal**: UNESCO World Heritage, one of 7 Wonders
+- **Red Fort**: Historical fort in Delhi
+- **Gateway of India**: Mumbai's iconic monument
+- **Temples**: Angkor Wat, Golden Temple, Varanasi
+
+**Economy & Technology:**
+- **IT Hub**: Bangalore - Silicon Valley of India
+- **Space**: ISRO - Mars Mission, Moon landings
+- **Startups**: Fastest growing startup ecosystem
+- **Industries**: IT, Pharmaceuticals, Manufacturing
+
+**Famous Indians:**
+- Mahatma Gandhi - Independence leader
+- APJ Abdul Kalam - Missile Man, President
+- Mother Teresa - Nobel Peace Prize
+- Sachin Tendulkar - Cricket legend
+- Sundar Pichai - Google CEO
+
+**Modern India:**
+- World's largest democracy
+- Fastest growing major economy
+- Tech powerhouse (IT services, software)
+- Young population - average age 28
+
+India is a land of incredible diversity, rich heritage, and rapid modernization! 🌟"""
+
+        elif detected_topic == 'programming':
             return f"""**Programming & Code** - Great question!
 
 You asked: "{message[:80]}..."
