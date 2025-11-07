@@ -322,57 +322,103 @@ Or ask me to explain math concepts like algebra, calculus, geometry, and more!""
         
         # Generate comprehensive answer based on detected topic
         if detected_topic == 'india':
-            return f"""**India** 🇮🇳 - Incredible India!
+            return f"""## India 🇮🇳 - Incredible India!
 
-You asked: "{message[:80]}..."
+You asked about India — here's everything you need to know about this amazing country.
 
-**Basic Facts:**
-- **Capital**: New Delhi
-- **Population**: 1.4+ billion (world's most populous)
-- **Official Languages**: Hindi & English (22 official languages total)
-- **Currency**: Indian Rupee (₹)
-- **Area**: 3.3 million km² (7th largest country)
+---
 
-**Rich History:**
-- One of the world's oldest civilizations (5000+ years)
-- Home to 4 major religions: Hinduism, Buddhism, Jainism, Sikhism
-- Ancient achievements: Mathematics (zero, decimal), Ayurveda, Yoga
-- Independence: August 15, 1947 (from British rule)
-- Led by Mahatma Gandhi's non-violent movement
+### ✅ Basic Facts
 
-**Culture & Diversity:**
-- **Festivals**: Diwali (Festival of Lights), Holi (Colors), Eid
-- **Cuisine**: Curry, Biryani, Dosa, Samosa, Chai
-- **Clothing**: Saree, Kurta, Traditional & Modern mix
-- **Bollywood**: Largest film industry by movies produced
-- **Classical Arts**: Bharatanatyam, Kathak dance, Classical music
+• **Capital**: New Delhi  
+• **Population**: 1.4+ billion (world's most populous country)  
+• **Official Languages**: Hindi & English (22 official languages total)  
+• **Currency**: Indian Rupee (₹)  
+• **Area**: 3.3 million km² (7th largest country)
 
-**Famous Landmarks:**
-- **Taj Mahal**: UNESCO World Heritage, one of 7 Wonders
-- **Red Fort**: Historical fort in Delhi
-- **Gateway of India**: Mumbai's iconic monument
-- **Temples**: Angkor Wat, Golden Temple, Varanasi
+### 🏛️ Rich History
 
-**Economy & Technology:**
-- **IT Hub**: Bangalore - Silicon Valley of India
-- **Space**: ISRO - Mars Mission, Moon landings
-- **Startups**: Fastest growing startup ecosystem
-- **Industries**: IT, Pharmaceuticals, Manufacturing
+• One of the world's oldest civilizations with **5000+ years** of history
 
-**Famous Indians:**
-- Mahatma Gandhi - Independence leader
-- APJ Abdul Kalam - Missile Man, President
-- Mother Teresa - Nobel Peace Prize
-- Sachin Tendulkar - Cricket legend
-- Sundar Pichai - Google CEO
+• Home to 4 major religions: Hinduism, Buddhism, Jainism, and Sikhism
 
-**Modern India:**
-- World's largest democracy
-- Fastest growing major economy
-- Tech powerhouse (IT services, software)
-- Young population - average age 28
+• Ancient achievements include:
+  - Invention of zero and decimal system
+  - Ayurveda (traditional medicine)
+  - Yoga and meditation practices
 
-India is a land of incredible diversity, rich heritage, and rapid modernization! 🌟"""
+• **Independence**: August 15, 1947 (from British rule)
+
+• Led by Mahatma Gandhi's non-violent freedom movement
+
+### 🎭 Culture & Diversity
+
+**Festivals:**  
+• Diwali - Festival of Lights  
+• Holi - Festival of Colors  
+• Eid, Christmas, and many regional celebrations
+
+**Cuisine:**  
+• Curry, Biryani, Dosa, Samosa, Chai (tea)  
+• Diverse regional specialties from North to South
+
+**Entertainment:**  
+• **Bollywood**: World's largest film industry by movies produced  
+• Classical dance forms: Bharatanatyam, Kathak  
+• Rich musical traditions
+
+### 🏰 Famous Landmarks
+
+• **Taj Mahal** - UNESCO World Heritage Site, one of the 7 Wonders of the World
+
+• **Red Fort** - Historic fort complex in Delhi
+
+• **Gateway of India** - Iconic monument in Mumbai
+
+• **Golden Temple** - Sacred Sikh shrine in Amritsar
+
+• **Varanasi** - One of the world's oldest living cities
+
+### 💻 Economy & Technology
+
+**IT Hub:**  
+• Bangalore known as the "Silicon Valley of India"  
+• Major tech companies and startups
+
+**Space Program:**  
+• ISRO achievements: Mars Orbiter Mission, Chandrayaan (Moon missions)
+
+**Business:**  
+• Fastest growing startup ecosystem in the world  
+• Key industries: IT, Pharmaceuticals, Manufacturing, Textiles
+
+### 🌟 Famous Indians
+
+• **Mahatma Gandhi** - Father of the Nation, independence leader
+
+• **APJ Abdul Kalam** - Missile Man of India, former President
+
+• **Mother Teresa** - Nobel Peace Prize winner (1979)
+
+• **Sachin Tendulkar** - Cricket legend, highest run scorer
+
+• **Sundar Pichai** - CEO of Google and Alphabet
+
+### 🚀 Modern India Today
+
+• World's **largest democracy** with 1.4 billion people
+
+• **Fastest growing major economy** globally
+
+• Tech powerhouse in IT services, software, and innovation
+
+• Young, dynamic population with average age of 28 years
+
+• Bridge between ancient traditions and modern innovation
+
+---
+
+India is truly a land of incredible diversity, rich cultural heritage, and rapid modernization! 🌟"""
 
         elif detected_topic == 'programming':
             return f"""**Programming & Code** - Great question!
