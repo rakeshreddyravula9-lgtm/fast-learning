@@ -471,7 +471,17 @@ function appendMessageChunk(chunk) {
 }
 
 function formatMessage(text) {
-    // Basic markdown-like formatting
+    // Use marked.js for proper markdown rendering
+    if (typeof marked !== 'undefined') {
+        marked.setOptions({
+            breaks: true,  // Convert \n to <br>
+            gfm: true,     // GitHub Flavored Markdown
+            sanitize: false // Allow HTML
+        });
+        return marked.parse(text);
+    }
+    
+    // Fallback: Basic markdown-like formatting
     let formatted = text;
     
     // Code blocks
@@ -485,11 +495,13 @@ function formatMessage(text) {
     // Bold
     formatted = formatted.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
     
-    // Italic
+    // Italic  
     formatted = formatted.replace(/\*([^*]+)\*/g, '<em>$1</em>');
     
-    // Line breaks
+    // Line breaks - convert double newlines to paragraphs, single to <br>
+    formatted = formatted.replace(/\n\n+/g, '</p><p>');
     formatted = formatted.replace(/\n/g, '<br>');
+    formatted = '<p>' + formatted + '</p>';
     
     return formatted;
 }
