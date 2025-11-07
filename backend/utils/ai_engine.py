@@ -225,12 +225,9 @@ class AIEngine:
             response = "I'm **Fast Learning AI** - your intelligent companion for learning ANYTHING!\n\nI provide detailed explanations on:\n• Science (physics, chemistry, biology)\n• Technology (programming, AI, web dev)\n• Mathematics (algebra, calculus, statistics)\n• History & Geography\n• Arts & Music\n• Sports & Health\n• Business & Economics\n• Philosophy & Literature\n• And virtually any other topic!\n\nHow can I assist your learning journey today?"
         
         # Universal question handler - answer ANYTHING!
-        elif '?' in message or any(word in message_lower for word in ['what', 'why', 'how', 'when', 'where', 'who', 'explain', 'tell me', 'describe']):
-            response = self._answer_universal_question(message, message_lower)
-        
-        # Default response
+        # This includes questions AND topic keywords (like "Technology", "Science", etc.)
         else:
-            response = "I'm here to help you learn about **anything**! I have knowledge spanning:\n\n🔬 **Science**: Physics, Chemistry, Biology, Astronomy\n💻 **Technology**: Programming, AI, Web Development\n📊 **Mathematics**: Algebra, Calculus, Statistics\n🌍 **Geography & History**: Countries, Events, Civilizations\n🎨 **Arts**: Music, Painting, Literature\n⚽ **Sports**: Rules, History, Famous Athletes\n💼 **Business**: Economics, Finance, Entrepreneurship\n⚕️ **Health**: Nutrition, Exercise, Wellness\n\nJust ask me a question about any topic!"
+            response = self._answer_universal_question(message, message_lower)
         
         return self._format_response(response, stream)
     
