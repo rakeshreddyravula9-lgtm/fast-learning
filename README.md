@@ -1,6 +1,6 @@
 # Fast Learning
 
-A full-stack conversational AI learning platform similar to ChatGPT, built with Flask and modern web technologies. Features real-time chat with WebSocket support, conversation history, and multiple AI model support.
+A full-stack conversational AI learning platform built with Flask and modern web technologies. Features real-time chat with WebSocket support, conversation history, universal knowledge system, and multiple AI model support.
 
 ![Fast Learning](https://img.shields.io/badge/AI-Fast%20Learning-10a37f?style=for-the-badge)
 ![Python](https://img.shields.io/badge/Python-3.12-blue?style=for-the-badge)
@@ -16,7 +16,7 @@ A full-stack conversational AI learning platform similar to ChatGPT, built with 
 - **Smart Fallback**: Automatically switches between OpenAI, local models, and rule-based responses
 
 ### 💬 Chat Features
-- **Modern ChatGPT-like UI**: Clean, intuitive interface
+- **Modern AI Chat Interface**: Clean, intuitive interface with gradient design
 - **Conversation Management**: Save, load, and delete chat sessions
 - **Message History**: Persistent storage of all conversations
 - **Typing Indicators**: Real-time feedback during AI response generation
@@ -99,7 +99,7 @@ fast-learning/
 └── LICENSE                        # MIT License
 ```
 
-## 🌍 Deploy to Cloud (Get Public URL like ChatGPT)
+## 🌍 Deploy to Cloud (Get Your Public URL)
 
 Your Fast Learning platform can be deployed to the cloud and accessible from anywhere with a public URL like `https://your-app.onrender.com`.
 
@@ -376,7 +376,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - OpenAI for GPT API
 - Hugging Face for transformer models
 - Flask and Socket.IO communities
-- ChatGPT UI inspiration
+- Modern AI chat interface design
 
 ## 📧 Support
 
